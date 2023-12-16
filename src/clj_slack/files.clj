@@ -63,4 +63,5 @@
        ;; if content is string use get request (e.g. post a snippet)
        (slack-request connection "files.upload" (merge params {"content" content}))
        ;; otherwise assume it is a file or an inputstream and use post
-       (slack-post-request connection "files.upload" (merge params {"file" content}))))))
+       (let [connection (assoc connection :content-type :x-www-form-urlencoded)]
+         (slack-post-request connection "files.upload" (merge params {"file" content})))))))

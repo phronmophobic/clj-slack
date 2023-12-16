@@ -47,9 +47,10 @@
   Optional request options can be specified which will be passed to `clj-http` without any changes.
   Can be useful to specify timeouts, etc."
   [url token post-params & [opts]]
-  (let [headers {"Content-Type" "application/json; charset=utf-8"
+  (let [headers {;;"Content-Type" "application/json; charset=utf-8"
                  "Authorization" (str "Bearer " token)}
-        response (http/post url (merge {:body (json/write-str post-params)
+        response (http/post url (merge {:body post-params
+                                        :content-type (get opts :content-type :json)
                                         :headers headers}
                                        opts))]
     (json/read-str (:body response) :key-fn (get opts :key-fn clojure.core/keyword))))
