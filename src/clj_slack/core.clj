@@ -39,7 +39,7 @@
                  "Authorization" (str "Bearer " token)}
         response (http/get full-url (merge {:headers headers} opts))]
     (if-let [body (:body response)]
-      (json/read-str body :key-fn clojure.core/keyword)
+      (json/read-str body :key-fn (get opts :key-fn clojure.core/keyword))
       (log/error "Error from Slack API:" (:error response)))))
 
 (defn- send-post-request
@@ -52,7 +52,7 @@
         response (http/post url (merge {:body (json/write-str post-params)
                                         :headers headers}
                                        opts))]
-    (json/read-str (:body response) :key-fn clojure.core/keyword)))
+    (json/read-str (:body response) :key-fn (get opts :key-fn clojure.core/keyword))))
 
 (defn- make-query-string
   "Transforms a map into url params"
